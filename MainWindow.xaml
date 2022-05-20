@@ -5,8 +5,169 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Motion_Tracking_UI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800"
+        Background="#181735">
     <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Background="#0f0f2D"
+              Grid.Column="0"
+              Grid.Row="0"
+              Grid.ColumnSpan="2">
+
+            <Grid.ColumnDefinitions>
+
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="MT for ChibiOS"
+                       Foreground="White"
+                       Grid.Column="0"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"/>
+
+            <TextBlock Text="Serial Settings"
+                       Foreground="White"
+                       Grid.Column="1"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"/>
+
+            <TextBlock Text="Device Settings"
+                       Foreground="White"
+                       Grid.Column="2"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"/>
+
+        </Grid>
+
+
+        <StackPanel 
+            Grid.Column="0"
+            Grid.Row="1"
+            VerticalAlignment="Top">
+
+            <StackPanel Orientation="Vertical"
+                        Margin="4,0,0,4">
+
+                <StackPanel Orientation="Horizontal">
+                    <Image Width="50" Height="50"
+                           Source="/Images/gyroscope.png"
+                           RenderOptions.BitmapScalingMode="HighQuality"
+                           Margin="0,0,4,0"/>
+                    <TextBlock Text="MT for ChibiOS"
+                               Foreground="White"
+                               FontSize="25"
+                               FontWeight="Medium"
+                               VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Device Status: "
+                       Foreground="White"
+                       FontWeight="Medium"
+                       FontSize="20"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       Margin="4,4,4,4"/>
+
+                    <TextBlock Text="No Data"
+                       Foreground="White"
+                       FontWeight="Medium"
+                       FontSize="16"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"/>
+
+                </StackPanel>
+
+            </StackPanel>
+
+
+            <StackPanel Orientation="Horizontal"
+                        Margin="0,10,0,0">
+                
+                <Button Content="Connect"
+                        Foreground="White"
+                        FontSize="14"
+                        FontWeight="Medium"
+                        Margin="4,4,4,4">
+
+                    <Button.Style>
+                        <Style TargetType="Button" >
+                            <Setter Property="Background" Value="LawnGreen"/>
+                            <Setter Property="Cursor" Value="Hand"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="DarkGreen"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="100" Height="25"
+                                    CornerRadius="12"
+                                    Background="{TemplateBinding Background}">
+                                <ContentPresenter VerticalAlignment="Center"
+                                                  HorizontalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <Button Content="Start MT"
+                        Foreground="White"
+                        FontSize="14"
+                        FontWeight="Medium"
+                        Margin="4,4,4,4">
+
+                    <Button.Style>
+                        <Style TargetType="Button" >
+                            <Setter Property="Background" Value="LightSeaGreen"/>
+                            <Setter Property="Cursor" Value="Hand"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="DarkSeaGreen"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="100" Height="25"
+                                    CornerRadius="12"
+                                    Background="{TemplateBinding Background}">
+                                <ContentPresenter VerticalAlignment="Center"
+                                                  HorizontalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+
+            </StackPanel>
+            
+            
+
+            
+
+        </StackPanel>
+
 
     </Grid>
 </Window>

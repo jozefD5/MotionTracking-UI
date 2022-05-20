@@ -2,10 +2,22 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net6.0-windows8.0</TargetFramework>
     <RootNamespace>Motion_Tracking_UI</RootNamespace>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Images\gyroscope.png" />
+    <None Remove="Images\motion-sensor.png" />
+    <None Remove="Images\slow-motion.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\gyroscope.png" />
+    <Resource Include="Images\motion-sensor.png" />
+    <Resource Include="Images\slow-motion.png" />
+  </ItemGroup>
 
 </Project>
