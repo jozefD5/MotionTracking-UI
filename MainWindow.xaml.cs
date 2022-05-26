@@ -20,9 +20,23 @@ namespace Motion_Tracking_UI
     /// </summary>
     public partial class MainWindow : Window
     {
+        int serialCount = 0;
+        String serialData = "";
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        //Click button event, adds new data to serial text box and scrolls to end
+        private void ConnectButton_Click(object sender, RoutedEventArgs e)
+        {
+            String newData = String.Format("\nData:{0}", serialCount);
+
+            serialData += newData;
+            SerialTextBlock.Text = serialData;
+            serialCount++;
+
+            SerialScroller.ScrollToEnd();
         }
     }
 }

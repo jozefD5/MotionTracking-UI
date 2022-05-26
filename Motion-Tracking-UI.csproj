@@ -15,6 +15,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SerialCommsLibrary\SerialCommsLibrary.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Images\gyroscope.png" />
     <Resource Include="Images\motion-sensor.png" />
     <Resource Include="Images\slow-motion.png" />
