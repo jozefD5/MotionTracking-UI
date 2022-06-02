@@ -13,6 +13,10 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using Motion_Tracking_UI.SerialCom;
+using System.IO.Ports;
+using System.Diagnostics;
+
 namespace Motion_Tracking_UI
 {
     /// <summary>
@@ -25,7 +29,10 @@ namespace Motion_Tracking_UI
         public MainWindow()
         {
             InitializeComponent();
+
+            ConfigureSerialComm();
         }
+
 
         //Click button event, adds new data to serial text box and scrolls to end
         private void ConnectButton_Click(object sender, RoutedEventArgs e)
@@ -38,5 +45,23 @@ namespace Motion_Tracking_UI
 
             SerialScroller.ScrollToEnd();
         }
+    
+
+        public static void ConfigureSerialComm()
+        {
+            //Serial port settings
+            SerialStmConf serialConf = new();
+            serialConf.PortName = "COM9";
+            serialConf.BaudRate = 115200;
+            serialConf.DataBits = 8;
+            serialConf.ParityBits = Parity.None;
+            serialConf.StopBits = StopBits.One;
+
+            //Display all available serial ports
+            SerialStm.DisplayAvailablePorts();
+
+        }
+
+
     }
 }
