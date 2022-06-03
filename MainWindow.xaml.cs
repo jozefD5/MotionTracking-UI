@@ -26,12 +26,73 @@ namespace Motion_Tracking_UI
     {
         int serialCount = 0;
         String serialData = "";
+   
+
+        //STM32 Serial driver object and settings
+        SerialStmConf serialConf = new();
+        SerialStm serialDriver = new();
+
+
         public MainWindow()
         {
             InitializeComponent();
 
             ConfigureSerialComm();
         }
+
+
+        
+    
+        //Configure initial serial settings
+        public void ConfigureSerialComm()
+        {
+            //Serial port settings
+            serialConf.PortName = "COM0";
+            serialConf.BaudRate = 115200;
+            serialConf.DataBits = 8;
+            serialConf.ParityBits = Parity.None;
+            serialConf.StopBits = StopBits.One;
+
+
+            //Initiate serial driver
+            serialDriver.SerialInit(serialConf);
+
+            //Get all available serial ports and update combobox
+            UpdateComboBox();
+        }
+
+
+
+
+        
+        //Refresh port list and update combobox
+        public void UpdateComboBox()
+        {
+            //Clear combobox
+            cbxPortSelector.ItemsSource = null;
+            cbxPortSelector.Items.Refresh();
+            //cbxPortSelector.DataContext = null;
+            /*
+
+            //Detect com ports
+            serialDriver.DetectSerialDevices();
+
+            Trace.WriteLine($"\n\nAvailable Serial Ports: {serialDriver.portListCount}");
+
+            for (int i = 0; i < serialDriver.portListCount; i++)
+            {
+                string str = serialDriver.GetSerialPort(i);
+                Trace.WriteLine($"Serial port: {str}");
+
+                cbxPortSelector.Items.Add(str);
+            }
+            */
+            cbxPortSelector.ItemsSource = serialDriver.GetSerialList();
+
+
+            cbxPortSelector.Items.Refresh();
+        }
+
 
 
         //Click button event, adds new data to serial text box and scrolls to end
@@ -45,23 +106,22 @@ namespace Motion_Tracking_UI
 
             SerialScroller.ScrollToEnd();
         }
-    
 
-        public static void ConfigureSerialComm()
+
+        //Refresh serial port lis button
+        private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
-            //Serial port settings
-            SerialStmConf serialConf = new();
-            serialConf.PortName = "COM9";
-            serialConf.BaudRate = 115200;
-            serialConf.DataBits = 8;
-            serialConf.ParityBits = Parity.None;
-            serialConf.StopBits = StopBits.One;
-
-            //Display all available serial ports
-            SerialStm.DisplayAvailablePorts();
-
+            UpdateComboBox();
         }
 
+        //Combobox selection change
+        private void cbxPortSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+ 
+            serialConf.PortName = (String)cbxPortSelector.SelectedItem;
+            Trace.WriteLine($"Selected port: {serialConf.PortName}");
 
+            serialDriver.SerialUpdateSettings(serialConf);
+        }
     }
 }

@@ -10,8 +10,7 @@
 
   <ItemGroup>
     <None Remove="Images\gyroscope.png" />
-    <None Remove="Images\motion-sensor.png" />
-    <None Remove="Images\slow-motion.png" />
+    <None Remove="Images\reload.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,8 +19,7 @@
 
   <ItemGroup>
     <Resource Include="Images\gyroscope.png" />
-    <Resource Include="Images\motion-sensor.png" />
-    <Resource Include="Images\slow-motion.png" />
+    <Resource Include="Images\reload.png" />
   </ItemGroup>
 
 </Project>

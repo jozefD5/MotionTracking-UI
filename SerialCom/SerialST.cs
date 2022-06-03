@@ -18,16 +18,48 @@ namespace Motion_Tracking_UI.SerialCom
         public StopBits StopBits { get; set; }
     }
 
+
+
     public class SerialStm
     {
         //Local serial IO port instance
         private SerialPort _serialPort = new();
 
+        //List of available/detected serial ports
+        private List<String> _portList = new List<String>();
+
+        //Range of available ports
+        public int portListCount { get; set; }
 
 
-        //Constructor
-        public SerialStm(SerialStmConf settings)
+
+
+
+        //Initilise serial driver, needs to be called before any serial 
+        //functionalities are used
+        public void SerialInit(SerialStmConf settings)
         {
+            SerialApplySettings(settings);
+
+            //Add data reacived handler
+            _serialPort.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
+        }
+
+
+        //Update settings
+        public void SerialUpdateSettings(SerialStmConf settings)
+        {
+            SerialClose();
+            SerialApplySettings(settings);
+            SerialOpen();
+        }
+
+
+        //Apply new settings
+        private void SerialApplySettings(SerialStmConf settings)
+        {
+            //Check if all parameters are set, if not set default
+            //Check serial port name
             if (string.IsNullOrEmpty(settings.PortName))
             {
                 _serialPort.PortName = "COM1";
@@ -37,6 +69,7 @@ namespace Motion_Tracking_UI.SerialCom
                 _serialPort.PortName = settings.PortName;
             }
 
+            //Check baud rate
             if (settings.BaudRate <= 9600)
             {
                 _serialPort.BaudRate = 9600;
@@ -46,6 +79,7 @@ namespace Motion_Tracking_UI.SerialCom
                 _serialPort.BaudRate = settings.BaudRate;
             }
 
+            //Check data bits
             if (settings.DataBits < 8)
             {
                 _serialPort.DataBits = 8;
@@ -55,12 +89,12 @@ namespace Motion_Tracking_UI.SerialCom
                 _serialPort.DataBits = settings.DataBits;
             }
 
+
             _serialPort.Parity = settings.ParityBits;
             _serialPort.StopBits = settings.StopBits;
-
-            _serialPort.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
-
         }
+
+
 
 
         //Open serial port
@@ -77,6 +111,7 @@ namespace Motion_Tracking_UI.SerialCom
 
 
 
+
         //Data Reacive hanndler, handles serial input data
         private void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
         {
@@ -88,7 +123,25 @@ namespace Motion_Tracking_UI.SerialCom
 
 
 
+        //Locate all available serial ports
+        public void DetectSerialDevices()
+        {
+            //Dtect serial ports and store them in list
+            foreach (string s in SerialPort.GetPortNames())
+            {
+                _portList.Add(s);
+            }
 
+        }
+
+
+        //Output list with all available serial ports
+        public List<String> GetSerialList()
+        {
+            DetectSerialDevices();
+
+            return _portList;
+        }
 
 
         //Print all available serial ports
