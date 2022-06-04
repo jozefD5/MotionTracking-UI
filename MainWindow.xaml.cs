@@ -24,9 +24,6 @@ namespace Motion_Tracking_UI
     /// </summary>
     public partial class MainWindow : Window
     {
-        int serialCount = 0;
-        String serialData = "";
-   
 
         //STM32 Serial driver object and settings
         SerialStmConf serialConf = new();
@@ -42,7 +39,51 @@ namespace Motion_Tracking_UI
 
 
         
-    
+
+
+        //Click button event, open serial port
+        private void ConnectButton_Click(object sender, RoutedEventArgs e)
+        {
+            
+            try
+            {
+                serialDriver.SerialOpen();
+            }
+            catch
+            {
+                PrintToTerminal("Error: Oppening serial port");
+            }
+        }
+
+
+
+        //Refresh serial port lis button
+        private void RefreshButton_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateComboBox();
+        }
+
+
+        //Update Com port for serial driver when new item is selected from combobox
+        private void cbxPortSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            serialConf.PortName = (String)cbxPortSelector.SelectedItem;
+            serialDriver.SerialUpdateSettings(serialConf);
+        }
+
+
+
+
+
+        //Print string to terminal windoe in application
+        public void PrintToTerminal(String str)
+        {
+            str += "\n";
+            SerialTextBlock.Text += str;
+            SerialScroller.ScrollToEnd();
+        }
+
+
         //Configure initial serial settings
         public void ConfigureSerialComm()
         {
@@ -57,14 +98,15 @@ namespace Motion_Tracking_UI
             //Initiate serial driver
             serialDriver.SerialInit(serialConf);
 
+            //Add data reacived handler
+            serialDriver.serialPort.DataReceived += new SerialDataReceivedEventHandler(SerialDataReceivedHandler);
+
+
             //Get all available serial ports and update combobox
             UpdateComboBox();
         }
 
 
-
-
-        
         //Refresh port list and update combobox
         public void UpdateComboBox()
         {
@@ -73,7 +115,6 @@ namespace Motion_Tracking_UI
             cbxPortSelector.Items.Refresh();
             //cbxPortSelector.DataContext = null;
             /*
-
             //Detect com ports
             serialDriver.DetectSerialDevices();
 
@@ -94,34 +135,22 @@ namespace Motion_Tracking_UI
         }
 
 
-
-        //Click button event, adds new data to serial text box and scrolls to end
-        private void ConnectButton_Click(object sender, RoutedEventArgs e)
+        //Data Reacive hanndler, handles serial input data
+        private void SerialDataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
         {
-            String newData = String.Format("\nData:{0}", serialCount);
+            SerialPort sp = (SerialPort)sender;
+            string indata = sp.ReadLine();
+            //Console.WriteLine(indata);
 
-            serialData += newData;
-            SerialTextBlock.Text = serialData;
-            serialCount++;
+            this.Dispatcher.Invoke(() =>
+            {
+                PrintToTerminal(indata);
+            });
 
-            SerialScroller.ScrollToEnd();
+            
         }
 
 
-        //Refresh serial port lis button
-        private void RefreshButton_Click(object sender, RoutedEventArgs e)
-        {
-            UpdateComboBox();
-        }
 
-        //Combobox selection change
-        private void cbxPortSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
- 
-            serialConf.PortName = (String)cbxPortSelector.SelectedItem;
-            Trace.WriteLine($"Selected port: {serialConf.PortName}");
-
-            serialDriver.SerialUpdateSettings(serialConf);
-        }
     }
 }

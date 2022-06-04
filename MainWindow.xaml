@@ -240,6 +240,7 @@
             <ScrollViewer x:Name="SerialScroller">
 
                 <TextBlock x:Name="SerialTextBlock"
+                           x:FieldModifier="public"
                            Foreground="White"
                            HorizontalAlignment="Left"/>
 
