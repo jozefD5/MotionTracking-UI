@@ -22,6 +22,7 @@ namespace Motion_Tracking_UI.SerialCom
 
 
 
+
     public class SerialStm
     {
         //Local serial IO port instance
@@ -92,18 +93,42 @@ namespace Motion_Tracking_UI.SerialCom
 
 
         //Open serial port
-        public void SerialOpen()
+        public bool SerialOpen()
         {
+            //Check if serial is open before attempting to connect
+            if (serialPort.IsOpen)
+            {
+                return true;
+            }
+
             serialPort.Open();
+            return serialPort.IsOpen;
+        }
+
+
+        //Output serial connection state
+        public bool IsSerialOpen()
+        {
+            return serialPort.IsOpen;
         }
 
 
         //Close serial port
         public void SerialClose()
         {
-            serialPort.Close();
+            if (serialPort.IsOpen)
+            {
+                serialPort.Close();
+            }
+           
         }
 
+
+        //Write string 
+        public void SerialWriteLine(String str)
+        {
+            serialPort.WriteLine(str);
+        }
 
 
 
@@ -142,7 +167,16 @@ namespace Motion_Tracking_UI.SerialCom
             }
             Trace.WriteLine(" ");
         }
-
-
     }
+
+
+
+
+    //Serial commands for controlling MT device via serial port
+    public static class MTCommands
+    {
+        public static string mt_start =  "cmdstr";
+        public static string mt_stop = "cmdstp";
+    }
+
 }

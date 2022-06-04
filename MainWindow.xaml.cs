@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using Motion_Tracking_UI.SerialCom;
 using System.IO.Ports;
 using System.Diagnostics;
+using System.Windows.Threading;
 
 namespace Motion_Tracking_UI
 {
@@ -28,6 +29,7 @@ namespace Motion_Tracking_UI
         //STM32 Serial driver object and settings
         SerialStmConf serialConf = new();
         SerialStm serialDriver = new();
+        bool serialMtState = false;
 
 
         public MainWindow()
@@ -35,6 +37,14 @@ namespace Motion_Tracking_UI
             InitializeComponent();
 
             ConfigureSerialComm();
+
+
+            //Update serial connection buttons state
+            UpdateSerialButtons();
+
+
+            //Add exceptions handler
+            this.Dispatcher.UnhandledException += OnDispatcherUnhandledException;
         }
 
 
@@ -44,17 +54,32 @@ namespace Motion_Tracking_UI
         //Click button event, open serial port
         private void ConnectButton_Click(object sender, RoutedEventArgs e)
         {
-            
             try
             {
-                serialDriver.SerialOpen();
+                if (serialDriver.SerialOpen())
+                {
+                    StatusTextBlock.Text = "Connected";
+                    StatusTextBlock.Foreground = new SolidColorBrush(Colors.Green);
+                    UpdateSerialButtons();
+
+
+                }
+                else
+                {
+                    StatusTextBlock.Text = "Disconnected";
+                    StatusTextBlock.Foreground = new SolidColorBrush(Colors.Red);
+                    UpdateSerialButtons();
+                }
+
             }
             catch
             {
                 PrintToTerminal("Error: Oppening serial port");
+                StatusTextBlock.Text = "Unable to connect";
+                StatusTextBlock.Foreground = new SolidColorBrush(Colors.Red);
+                UpdateSerialButtons();
             }
         }
-
 
 
         //Refresh serial port lis button
@@ -64,11 +89,53 @@ namespace Motion_Tracking_UI
         }
 
 
+        //Clear terminal
+        private void ClearSerialButton_Click(object sender, RoutedEventArgs e)
+        {
+            SerialTextBlock.Text = "";
+        }
+
+
         //Update Com port for serial driver when new item is selected from combobox
         private void cbxPortSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             serialConf.PortName = (String)cbxPortSelector.SelectedItem;
             serialDriver.SerialUpdateSettings(serialConf);
+        }
+
+
+        //Activate MT by sending star command via serial
+        private void StartMtButton_Click(object sender, RoutedEventArgs e)
+        {
+            
+
+
+            if (!serialMtState)
+            {
+                PrintToTerminal($"MtCommand: {MTCommands.mt_start}");
+                serialDriver.SerialWriteLine(MTCommands.mt_start);
+
+                StartMtButton.Content = "Stop Mt";
+                serialMtState = true;
+            }
+            else
+            {
+                PrintToTerminal($"MtCommand: {MTCommands.mt_stop}");
+                serialDriver.SerialWriteLine(MTCommands.mt_stop);
+
+                StartMtButton.Content = "Start Mt";
+                serialMtState = false;
+
+            }
+
+        }
+
+
+        //Disconnect serial port
+        private void DisconnectButton_Click(object sender, RoutedEventArgs e)
+        {
+            serialDriver.SerialClose(); ;
+
         }
 
 
@@ -107,6 +174,24 @@ namespace Motion_Tracking_UI
         }
 
 
+        public void UpdateSerialButtons()
+        {
+            if (serialDriver.IsSerialOpen())
+            {
+                ConnectButton.IsEnabled = false;
+                DisconnectButton.IsEnabled = true;
+                StartMtButton.IsEnabled = true;
+            }
+            else
+            {
+                ConnectButton.IsEnabled = true;
+                DisconnectButton.IsEnabled = false;
+                StartMtButton.IsEnabled = false;
+            }
+
+        }
+
+
         //Refresh port list and update combobox
         public void UpdateComboBox()
         {
@@ -140,10 +225,10 @@ namespace Motion_Tracking_UI
         {
             SerialPort sp = (SerialPort)sender;
             string indata = sp.ReadLine();
-            //Console.WriteLine(indata);
 
             this.Dispatcher.Invoke(() =>
             {
+                
                 PrintToTerminal(indata);
             });
 
@@ -152,5 +237,14 @@ namespace Motion_Tracking_UI
 
 
 
+        //Error handler
+        private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            StatusTextBlock.Text = "Error";
+            StatusTextBlock.Foreground = new SolidColorBrush(Colors.Red);
+            e.Handled = true;
+        }
+
+        
     }
 }
