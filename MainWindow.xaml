@@ -5,8 +5,306 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Motion_Tracking_UI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800"
+        Background="#181735">
     <Grid>
 
+        <!-- Seperate window into rows and collums  -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="400*"/>
+            <ColumnDefinition Width="167*"/>
+            <ColumnDefinition Width="233*"/>
+        </Grid.ColumnDefinitions>
+
+
+        <!-- Menue grid, sets top menue bar components-->
+        <Grid Background="#0f0f2D"
+              Grid.Column="0"
+              Grid.Row="0"
+              Grid.ColumnSpan="3">
+
+            <Grid.ColumnDefinitions>
+
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+
+            </Grid.ColumnDefinitions>
+
+            
+
+            <!--Clear terminal data button-->
+            <StackPanel Grid.Column="3"
+                        Grid.Row="0"
+                        Orientation="Horizontal">
+
+                <Button x:Name="ClearSerialButton"
+                        Content="Clear"
+                        Foreground="White"
+                        FontSize="12"
+                        FontWeight="Medium"
+                        Margin="0,4,4,0"
+                        Click="ClearSerialButton_Click">
+
+                    <Button.Style>
+                        <Style TargetType="Button" >
+                            <Setter Property="Background" Value="LightSeaGreen"/>
+                            <Setter Property="Cursor" Value="Hand"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="DarkSeaGreen"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="70" Height="20"
+                                    CornerRadius="12"
+                                    Background="{TemplateBinding Background}">
+                                <ContentPresenter VerticalAlignment="Center"
+                                                  HorizontalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+                
+            </StackPanel>
+            
+        </Grid>
+
+
+        <!-- Main device controll/connection section-->
+        <StackPanel 
+            Grid.Column="0"
+            Grid.Row="1"
+            VerticalAlignment="Top">
+
+            <!-- Device's connection info-->
+            <StackPanel Orientation="Vertical"
+                        Margin="4,0,0,4">
+
+                <StackPanel Orientation="Horizontal">
+                    <Image Width="50" Height="50"
+                           Source="/Images/gyroscope.png"
+                           RenderOptions.BitmapScalingMode="HighQuality"
+                           Margin="0,0,4,0"/>
+                    <TextBlock Text="MT for ChibiOS"
+                               Foreground="White"
+                               FontSize="25"
+                               FontWeight="Medium"
+                               VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <!-- Devace connection status-->
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Device Status: "
+                       Foreground="White"
+                       FontWeight="Medium"
+                       FontSize="20"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       Margin="4,4,4,4"/>
+
+                    <TextBlock x:Name="StatusTextBlock"
+                               Text="No Data"
+                               Foreground="White"
+                               FontWeight="Medium"
+                               FontSize="16"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"/>
+
+                </StackPanel>
+
+            </StackPanel>
+
+
+            <!-- Serial (UART) controlls-->
+            <StackPanel Orientation="Horizontal"
+                        Margin="0,10,0,0">
+
+                <Button x:Name="ConnectButton" 
+                        Content="Connect"
+                        Foreground="White"
+                        FontSize="14"
+                        FontWeight="Medium"
+                        Margin="4,4,40,4"
+                        Click="ConnectButton_Click">
+
+                    <Button.Style>
+                        <Style TargetType="Button" >
+                            <Setter Property="Background" Value="LawnGreen"/>
+                            <Setter Property="Cursor" Value="Hand"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="DarkGreen"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="100" Height="25"
+                                    CornerRadius="12"
+                                    Background="{TemplateBinding Background}">
+                                <ContentPresenter VerticalAlignment="Center"
+                                                  HorizontalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+
+                <Button x:Name="DisconnectButton"
+                        Content="Disconnect"
+                        Foreground="White"
+                        FontSize="14"
+                        FontWeight="Medium"
+                        Margin="0,4,40,4"
+                        Click="DisconnectButton_Click">
+
+                    <Button.Style>
+                        <Style TargetType="Button" >
+                            <Setter Property="Background" Value="Red"/>
+                            <Setter Property="Cursor" Value="Hand"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="DarkRed"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="100" Height="25"
+                                    CornerRadius="12"
+                                    Background="{TemplateBinding Background}">
+                                <ContentPresenter VerticalAlignment="Center"
+                                                  HorizontalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                     
+                <Button x:Name="StartMtButton"
+                        Content="Start MT"
+                        Foreground="White"
+                        FontSize="14"
+                        FontWeight="Medium"
+                        Margin="0,4,4,4"
+                        Click="StartMtButton_Click">
+
+                    <Button.Style>
+                        <Style TargetType="Button" >
+                            <Setter Property="Background" Value="LightSeaGreen"/>
+                            <Setter Property="Cursor" Value="Hand"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="DarkSeaGreen"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="100" Height="25"
+                                    CornerRadius="12"
+                                    Background="{TemplateBinding Background}">
+                                <ContentPresenter VerticalAlignment="Center"
+                                                  HorizontalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+            </StackPanel>
+
+
+            <!--Combobox panel and settings-->
+            <StackPanel Orientation="Horizontal"
+                        Margin="4,0,0,4">
+
+                <Button x:Name="RefreshButton"
+                        Content="Refresh"
+                        Foreground="White"
+                        FontSize="14"
+                        FontWeight="Medium"
+                        Margin="0,0,40,0"
+                        Click="RefreshButton_Click">
+
+                    <Button.Style>
+                        <Style TargetType="Button" >
+                            <Setter Property="Background" Value="LightSeaGreen"/>
+                            <Setter Property="Cursor" Value="Hand"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="DarkSeaGreen"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="100" Height="25"
+                                    CornerRadius="12"
+                                    Background="{TemplateBinding Background}">
+                                <ContentPresenter VerticalAlignment="Center"
+                                                  HorizontalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                
+                <TextBlock Text="Device: "
+                           Foreground="White"
+                           FontSize="16"
+                           FontWeight="Medium"
+                           VerticalAlignment="Center"
+                           Margin="0,0,10,0"/>
+
+                <ComboBox x:Name="cbxPortSelector"
+                          Width="100"
+                          SelectionChanged="cbxPortSelector_SelectionChanged">
+                </ComboBox>
+
+            </StackPanel>
+
+        </StackPanel>
+
+
+        <!-- Scrollview for displaying serial data-->
+        <Grid Grid.Column="1"
+              Grid.Row="1" Grid.ColumnSpan="2">
+
+            <ScrollViewer x:Name="SerialScroller"
+                          Background="#363377">
+
+                <TextBlock x:Name="SerialTextBlock"
+                           x:FieldModifier="public"
+                           Foreground="White"
+                           HorizontalAlignment="Left"/>
+
+            </ScrollViewer>
+
+        </Grid>
+
     </Grid>
+    
+    
+    
 </Window>
