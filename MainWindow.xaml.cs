@@ -178,14 +178,14 @@ namespace Motion_Tracking_UI
         {
             if (serialDriver.IsSerialOpen())
             {
-                ConnectButton.IsEnabled = false;
-                DisconnectButton.IsEnabled = true;
+                //ConnectButton.IsEnabled = false;
+                //DisconnectButton.IsEnabled = true;
                 StartMtButton.IsEnabled = true;
             }
             else
             {
-                ConnectButton.IsEnabled = true;
-                DisconnectButton.IsEnabled = false;
+                //ConnectButton.IsEnabled = true;
+                //DisconnectButton.IsEnabled = false;
                 StartMtButton.IsEnabled = false;
             }
 
@@ -223,8 +223,23 @@ namespace Motion_Tracking_UI
         //Data Reacive hanndler, handles serial input data
         private void SerialDataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
         {
+            string indata = "";
             SerialPort sp = (SerialPort)sender;
-            string indata = sp.ReadLine();
+            
+
+            try
+            {
+                indata = sp.ReadLine();
+            }
+            catch
+            {
+                this.Dispatcher.Invoke(() =>
+                {
+                    StatusTextBlock.Text = "Hardware was disconnected";
+                    StatusTextBlock.Foreground = new SolidColorBrush(Colors.Red);
+                    UpdateSerialButtons();
+                });
+            }
 
             this.Dispatcher.Invoke(() =>
             {
