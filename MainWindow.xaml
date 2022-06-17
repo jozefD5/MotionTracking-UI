@@ -110,14 +110,15 @@
                 </StackPanel>
 
                 <!-- Devace connection status-->
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal"
+                            Margin="0,4,0,4">
                     <TextBlock Text="Device Status: "
                        Foreground="White"
                        FontWeight="Medium"
                        FontSize="20"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Center"
-                       Margin="4,4,4,4"/>
+                       Margin="4,0,4,0"/>
 
                     <TextBlock x:Name="StatusTextBlock"
                                Text="No Data"
@@ -222,7 +223,6 @@
                         Foreground="White"
                         FontSize="14"
                         FontWeight="Medium"
-                        Margin="0,0,0,0"
                         Click="DisconnectButton_Click">
 
                     <Button.Style>
@@ -254,7 +254,7 @@
 
             <!--Combobox panel and settings-->
             <StackPanel Orientation="Horizontal"
-                        Margin="0,20,0,4">
+                        Margin="0,40,0,4">
 
                 <Button x:Name="StartMtButton"
                         Content="Start MT"
@@ -288,18 +288,8 @@
                     </Button.Template>
                 </Button>
 
-
-
             </StackPanel>
-
         </StackPanel>
-
-
-
-
-
-
-
 
 
 
